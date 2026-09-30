@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockManager - Mockups UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --primary: #2563EB;
+    --primary-dark: #1D4ED8;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --text: #1F2937;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,.08);
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-size:14px;
+    line-height:1.5;
+    padding:24px;
+  }
+  /* ---------- DEMO NAV ---------- */
+  .demo-nav{
+    max-width:1400px;margin:0 auto 24px;
+    background:var(--surface);border-radius:var(--radius);
+    padding:12px;box-shadow:var(--shadow);
+    display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  }
+  .demo-nav h1{
+    font-size:15px;font-weight:700;margin-right:16px;
+    display:flex;align-items:center;gap:8px;color:var(--primary);
+  }
+  .demo-nav h1 span{
+    background:var(--primary);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;
+  }
+  .tab-btn{
+    border:none;background:transparent;color:var(--text-muted);
+    padding:8px 14px;border-radius:8px;cursor:pointer;
+    font-family:inherit;font-size:13px;font-weight:500;transition:.15s;
+  }
+  .tab-btn:hover{background:#EFF3F9;color:var(--text);}
+  .tab-btn.active{background:var(--primary);color:#fff;}
+
+  /* ---------- SCREEN CONTAINER ---------- */
+  .screen{
+    display:none;
+    max-width:1400px;margin:0 auto;
+    background:var(--surface);border-radius:14px;
+    box-shadow:var(--shadow-lg);overflow:hidden;
+    min-height:600px;
+  }
+  .screen.active{display:block;}
+
+  /* ---------- LOGIN ---------- */
+  .login-wrap{
+    display:grid;grid-template-columns:1fr 1fr;min-height:640px;
+  }
+  .login-left{
+    background:linear-gradient(135deg,#2563EB 0%,#1E40AF 100%);
+    color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;overflow:hidden;
+  }
+  .login-left::after{
+    content:"";position:absolute;bottom:-60px;right:-60px;
+    width:260px;height:260px;background:rgba(255,255,255,.08);border-radius:50%;
+  }
+  .login-left::before{
+    content:"";position:absolute;top:-80px;left:-80px;
+    width:200px;height:200px;background:rgba(255,255,255,.06);border-radius:50%;
+  }
+  .logo{font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px;z-index:1;}
+  .login-left h2{font-size:30px;font-weight:700;line-height:1.25;margin:32px 0 20px;z-index:1;}
+  .feature-list{display:flex;flex-direction:column;gap:12px;z-index:1;}
+  .feature-list div{display:flex;align-items:center;gap:10px;font-size:14px;opacity:.95;}
+  .check{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:11px;}
+  .login-foot{font-size:12px;opacity:.75;z-index:1;}
+  .login-right{padding:60px 56px;display:flex;flex-direction:column;justify-content:center;}
+  .login-right h3{font-size:24px;font-weight:700;margin-bottom:8px;}
+  .login-right .sub{color:var(--text-muted);margin-bottom:32px;font-size:14px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text);}
+  .field input{
+    width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+    font-family:inherit;font-size:14px;background:var(--surface);color:var(--text);transition:.15s;
+  }
+  .field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12);}
+  .btn-primary{
+    width:100%;padding:13px;background:var(--primary);color:#fff;border:none;
+    border-radius:8px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;
+  }
+  .btn-primary:hover{background:var(--primary-dark);}
+  .link-muted{text-align:center;color:var(--text-muted);font-size:13px;margin-top:18px;}
+  .link-muted a{color:var(--primary);text-decoration:none;font-weight:500;}
+
+  /* ---------- APP SHELL ---------- */
+  .app{display:grid;grid-template-columns:240px 1fr;min-height:640px;}
+  .sidebar{
+    background:#0F172A;color:#CBD5E1;padding:20px 0;
+    display:flex;flex-direction:column;
+  }
+  .sidebar .brand{
+    color:#fff;font-weight:700;font-size:16px;padding:0 22px 20px;
+    display:flex;align-items:center;gap:10px;border-bottom:1px solid #1E293B;margin-bottom:14px;
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:12px;padding:11px 22px;
+    color:#94A3B8;font-size:13.5px;cursor:pointer;transition:.15s;
+    border-left:3px solid transparent;
+  }
+  .nav-item:hover{background:#1E293B;color:#E2E8F0;}
+  .nav-item.active{background:#1E293B;color:#fff;border-left-color:var(--primary);font-weight:500;}
+  .nav-item .ico{width:18px;text-align:center;font-size:15px;}
+  .nav-spacer{flex:1;}
+  .nav-foot{padding:14px 22px;border-top:1px solid #1E293B;font-size:12px;color:#64748B;}
+
+  .main{background:var(--bg);overflow:auto;}
+  .topbar{
+    background:var(--surface);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5;
+  }
+  .topbar-left{display:flex;align-items:center;gap:18px;font-size:14px;}
+  .topbar-left .status{display:flex;align-items:center;gap:7px;font-weight:500;font-size:13px;}
+  .dot{width:9px;height:9px;border-radius:50%;}
+  .dot.on{background:var(--success);box-shadow:0 0 0 3px rgba(16,185,129,.15);}
+  .dot.off{background:var(--danger);box-shadow:0 0 0 3px rgba(239,68,68,.15);}
+  .dot.warn{background:var(--warning);box-shadow:0 0 0 3px rgba(245,158,11,.15);}
+  .user-chip{display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:20px;background:#F1F5F9;cursor:pointer;}
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
+  .content{padding:26px 28px;}
+  .page-title{font-size:20px;font-weight:700;margin-bottom:4px;}
+  .page-sub{color:var(--text-muted);font-size:13px;margin-bottom:22px;}
+
+  /* ---------- CARDS / KPI ---------- */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+  .kpi{
+    background:var(--surface);border-radius:var(--radius);padding:18px 20px;
+    box-shadow:var(--shadow);border-left:4px solid var(--primary);
+  }
+  .kpi .label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
+  .kpi .value{font-size:24px;font-weight:700;margin:6px 0 2px;}
+  .kpi .delta{font-size:12.5px;font-weight:500;color:var(--success);}
+  .kpi.warn{border-left-color:var(--warning);}
+  .kpi.warn .value{color:var(--warning);}
+
+  .grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;}
+  .panel{
+    background:var(--surface);border-radius:var(--radius);padding:18px 20px;
+    box-shadow:var(--shadow);
+  }
+  .panel h4{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .chart{display:flex;align-items:flex-end;gap:14px;height:130px;padding:10px 0;}
+  .bar{flex:1;background:linear-gradient(180deg,#93C5FD,#2563EB);border-radius:6px 6px 0 0;position:relative;transition:.2s;}
+  .bar:hover{filter:brightness(1.1);}
+  .bar span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:11px;color:var(--text-muted);}
+
+  .list-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 12px;border-radius:8px;font-size:13.5px;
+  }
+  .list-item:nth-child(odd){background:#F8FAFC;}
+  .list-item .time{color:var(--text-muted);font-size:12px;margin-right:10px;font-weight:500;}
+  .alert-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+  .alert-item:last-child{border-bottom:none;}
+  .badge{padding:3px 9px;border-radius:6px;font-size:11.5px;font-weight:600;}
+  .badge.red{background:#FEE2E2;color:#B91C1C;}
+  .badge.amber{background:#FEF3C7;color:#B45309;}
+  .badge.green{background:#D1FAE5;color:#047857;}
+  .badge.blue{background:#DBEAFE;color:#1D4ED8;}
+  .badge.gray{background:#E5E7EB;color:#4B5563;}
+
+  /* ---------- POS ---------- */
+  .pos{display:grid;grid-template-columns:1fr 380px;gap:20px;}
+  .search-bar{
+    display:flex;gap:10px;margin-bottom:14px;
+  }
+  .search-bar input{
+    flex:1;padding:13px 16px;border:2px solid var(--border);border-radius:10px;
+    font-family:inherit;font-size:14px;background:var(--surface);
+  }
+  .search-bar input:focus{outline:none;border-color:var(--primary);}
+  .search-bar button{
+    padding:0 20px;background:var(--primary);color:#fff;border:none;border-radius:10px;
+    font-family:inherit;font-weight:600;cursor:pointer;font-size:14px;
+  }
+  .mode-toggle{display:flex;gap:8px;margin-bottom:16px;}
+  .mode-toggle button{
+    padding:8px 16px;border:1.5px solid var(--border);background:var(--surface);
+    border-radius:20px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;color:var(--text-muted);
+  }
+  .mode-toggle button.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .product-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px;
+  }
+  .product-row:last-child{border-bottom:none;}
+  .product-row:hover{background:#F8FAFC;}
+  .add-btn{
+    background:#DBEAFE;color:var(--primary);border:none;width:32px;height:32px;
+    border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;
+  }
+  .add-btn:hover{background:var(--primary);color:#fff;}
+
+  .ticket{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;flex-direction:column;}
+  .ticket-head{padding:16px 20px;border-bottom:1px dashed var(--border);}
+  .ticket-head h4{font-size:15px;display:flex;justify-content:space-between;align-items:center;}
+  .ticket-head .meta{font-size:12px;color:var(--text-muted);margin-top:4px;}
+  .ticket-items{padding:12px 20px;flex:1;overflow:auto;max-height:230px;}
+  .ticket-item{display:grid;grid-template-columns:30px 1fr auto;gap:10px;padding:8px 0;font-size:13.5px;border-bottom:1px dashed var(--border);}
+  .ticket-item:last-child{border-bottom:none;}
+  .ticket-item .qty{font-weight:600;color:var(--primary);}
+  .ticket-totals{padding:14px 20px;background:#F8FAFC;border-top:1px solid var(--border);}
+  .tot-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text-muted);}
+  .tot-row.grand{font-size:18px;font-weight:700;color:var(--text);padding-top:10px;margin-top:8px;border-top:1px solid var(--border);}
+  .pay-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 20px;}
+  .pay-btns button{
+    padding:11px;border:1.5px solid var(--border);background:var(--surface);
+    border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;
+  }
+  .pay-btns button:hover{border-color:var(--primary);color:var(--primary);}
+  .btn-cobrar{
+    margin:0 20px 20px;padding:15px;background:var(--success);color:#fff;border:none;
+    border-radius:10px;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;width:calc(100% - 40px);
+  }
+  .btn-cobrar:hover{background:#059669;}
+
+  /* ---------- OFFLINE BANNER ---------- */
+  .offline-banner{
+    background:#FEF3C7;border:1px solid #FCD34D;color:#92400E;
+    padding:12px 18px;border-radius:10px;display:flex;justify-content:space-between;
+    align-items:center;margin-bottom:18px;font-size:13.5px;
+  }
+  .offline-banner strong{color:#78350F;}
+
+  /* ---------- TABLES ---------- */
+  .table-wrap{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  thead th{
+    background:#F8FAFC;text-align:left;padding:12px 16px;font-weight:600;
+    color:var(--text-muted);font-size:12px;text-transform:uppercase;letter-spacing:.3px;
+    border-bottom:1px solid var(--border);
+  }
+  tbody td{padding:12px 16px;border-bottom:1px solid var(--border);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#F8FAFC;}
+  tbody tr.doubt{background:#FFFBEB;}
+  .act-btn{
+    border:none;background:transparent;cursor:pointer;padding:4px 6px;border-radius:6px;
+    font-size:14px;transition:.15s;
+  }
+  .act-btn:hover{background:#EFF3F9;}
+
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap;}
+  .btn-outline{
+    padding:9px 16px;background:var(--surface);border:1.5px solid var(--border);
+    border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .btn-outline:hover{border-color:var(--primary);color:var(--primary);}
+  .btn-solid{
+    padding:9px 18px;background:var(--primary);color:#fff;border:none;border-radius:8px;
+    font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .btn-solid:hover{background:var(--primary-dark);}
+  .btn-success{background:var(--success);}
+  .btn-success:hover{background:#059669;}
+
+  /* ---------- STEP CARDS ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px;}
+  .step-card{
+    background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--radius);
+    padding:20px;text-align:center;cursor:pointer;transition:.15s;
+  }
+  .step-card:hover{border-color:var(--primary);background:#F0F7FF;}
+  .step-card .ico{font-size:28px;margin-bottom:10px;}
+  .step-card h5{font-size:14px;font-weight:600;margin-bottom:6px;}
+  .step-card p{font-size:12px;color:var(--text-muted);}
+  .step-card button{
+    margin-top:12px;padding:7px 14px;background:var(--primary);color:#fff;border:none;
+    border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:500;cursor:pointer;
+  }
+
+  /* ---------- TABS INTERNOS ---------- */
+  .inner-tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:20px;}
+  .inner-tab{
+    padding:10px 16px;background:transparent;border:none;font-family:inherit;
+    font-size:13.5px;font-weight:500;color:var(--text-muted);cursor:pointer;
+    border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s;
+  }
+  .inner-tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+  .inner-tab:hover{color:var(--text);}
+
+  /* ---------- CONFIG GRID ---------- */
+  .cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .cfg-panel{
+    background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);
+  }
+  .cfg-panel h4{font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .cfg-field{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
+  .cfg-field:last-child{border-bottom:none;}
+  .cfg-field input[type=text], .cfg-field input[type=number], .cfg-field select{
+    padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;
+    font-family:inherit;font-size:13px;min-width:150px;background:var(--surface);
+  }
+  .cfg-field input:focus,.cfg-field select:focus{outline:none;border-color:var(--primary);}
+  .switch{position:relative;display:inline-block;width:40px;height:22px;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{position:absolute;cursor:pointer;inset:0;background:#CBD5E1;border-radius:22px;transition:.2s;}
+  .slider:before{content:"";position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;}
+  input:checked + .slider{background:var(--success);}
+  input:checked + .slider:before{transform:translateX(18px);}
+
+  /* ---------- ASISTENCIA ---------- */
+  .help-hero{
+    background:linear-gradient(135deg,#EFF6FF,#DBEAFE);
+    border:1px solid #BFDBFE;border-radius:14px;padding:32px;
+    text-align:center;margin-bottom:24px;
+  }
+  .help-hero h3{font-size:20px;font-weight:700;margin-bottom:10px;}
+  .help-hero p{color:var(--text-muted);margin-bottom:20px;max-width:600px;margin-left:auto;margin-right:auto;}
+  .help-hero ul{
+    display:inline-block;text-align:left;margin-bottom:22px;color:var(--text);font-size:14px;line-height:2;
+  }
+  .help-hero ul li{list-style:none;}
+  .help-hero ul li::before{content:"✓ ";color:var(--success);font-weight:700;margin-right:6px;}
+  .help-form{background:var(--surface);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);max-width:700px;margin:0 auto;}
+  .help-form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  .help-form .full{margin-bottom:14px;}
+  .help-form label{display:block;font-size:12.5px;font-weight:500;margin-bottom:5px;}
+  .help-form input[type=text],.help-form textarea{
+    width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:7px;
+    font-family:inherit;font-size:13.5px;resize:vertical;
+  }
+  .check-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px;}
+  .check-row label{display:flex;align-items:center;gap:6px;font-weight:400;font-size:13.5px;}
+
+  /* ---------- FOOTER ---------- */
+  .mock-footer{
+    text-align:center;padding:22px;color:var(--text-muted);font-size:12.5px;
+    border-top:1px solid var(--border);margin-top:20px;
+  }
+
+  @media(max-width:1024px){
+    .app{grid-template-columns:70px 1fr;}
+    .sidebar .brand span, .nav-item span:not(.ico){display:none;}
+    .nav-item{justify-content:center;}
+    .login-wrap{grid-template-columns:1fr;}
+    .login-left{display:none;}
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2,.pos,.cfg-grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= DEMO NAV ================= -->
+<div class="demo-nav">
+  <h1>📦 StockManager <span>MOCKUPS UI</span></h1>
+  <button class="tab-btn active" data-screen="login">🔐 Login</button>
+  <button class="tab-btn" data-screen="dashboard">📊 Dashboard</button>
+  <button class="tab-btn" data-screen="pos">🛒 POS</button>
+  <button class="tab-btn" data-screen="offline">📡 Modo Offline</button>
+  <button class="tab-btn" data-screen="carga">📥 Carga Inventario</button>
+  <button class="tab-btn" data-screen="roles">👥 Roles y Permisos</button>
+  <button class="tab-btn" data-screen="catalogos">🏷️ Catálogos</button>
+  <button class="tab-btn" data-screen="config">⚙️ Configuración</button>
+  <button class="tab-btn" data-screen="auditoria">📋 Auditoría</button>
+  <button class="tab-btn" data-screen="soporte">🆘 Soporte</button>
+</div>
+
+<!-- ================= 1. LOGIN ================= -->
+<div class="screen active" id="screen-login">
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="logo">📦 StockManager</div>
+      <div>
+        <h2>Control inteligente de inventarios y punto de venta.</h2>
+        <div class="feature-list">
+          <div><span class="check">✓</span> Modo Offline con sincronización automática</div>
+          <div><span class="check">✓</span> Cobro rápido con escáner o entrada manual</div>
+          <div><span class="check">✓</span> Gestión multi-sucursal y multi-usuario</div>
+          <div><span class="check">✓</span> Auditoría y trazabilidad completa</div>
+        </div>
+      </div>
+      <div class="login-foot">🟢 Sistema Operativo · v2.1.0 · © 2025</div>
+    </div>
+    <div class="login-right">
+      <h3>Iniciar Sesión</h3>
+      <p class="sub">Ingresa tus credenciales para continuar</p>
+      <div class="field">
+        <label>👤 Usuario</label>
+        <input type="text" placeholder="admin@tienda.com" value="admin@tienda.com">
+      </div>
+      <div class="field">
+        <label>🔒 Contraseña</label>
+        <input type="password" placeholder="••••••••" value="password123">
+      </div>
+      <button class="btn-primary">INGRESAR</button>
+      <p class="link-muted">¿Olvidaste tu contraseña? <a href="#">Recuperar acceso</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. DASHBOARD ================= -->
+<div class="screen" id="screen-dashboard">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item active"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Sucursal Centro</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>🏪 Sucursal Centro ▾</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">CR</div>
+          <span>Carlos R. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">¡Buenos días, Carlos! 👋</h2>
+        <p class="page-sub">📅 Lunes 15 de Abril, 2025 · Resumen general</p>
+
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="label">Ventas Hoy</div>
+            <div class="value">$12,450</div>
+            <div class="delta">↑ 12% vs ayer</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Tickets</div>
+            <div class="value">148</div>
+            <div class="delta">↑ 5% vs ayer</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Productos Activos</div>
+            <div class="value">1,240</div>
+            <div class="delta">+18 esta semana</div>
+          </div>
+          <div class="kpi warn">
+            <div class="label">⚠️ Alertas Stock</div>
+            <div class="value">7</div>
+            <div class="delta" style="color:var(--warning)">Requieren reorden</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <h4>📈 Ventas últimas 24 horas</h4>
+            <div class="chart">
+              <div class="bar" style="height:40%"><span>00h</span></div>
+              <div class="bar" style="height:55%"><span>04h</span></div>
+              <div class="bar" style="height:75%"><span>08h</span></div>
+              <div class="bar" style="height:95%"><span>12h</span></div>
+              <div class="bar" style="height:80%"><span>16h</span></div>
+              <div class="bar" style="height:60%"><span>20h</span></div>
+              <div class="bar" style="height:35%"><span>24h</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h4>⚠️ Alertas de Stock Bajo</h4>
+            <div class="alert-item">
+              <div><strong>Leche Entera 1L</strong><br><small style="color:var(--text-muted)">3 unidades · min 20</small></div>
+              <span class="badge red">Crítico</span>
+            </div>
+            <div class="alert-item">
+              <div><strong>Pan Integral</strong><br><small style="color:var(--text-muted)">8 unidades · min 15</small></div>
+              <span class="badge amber">Bajo</span>
+            </div>
+            <div class="alert-item">
+              <div><strong>Aceite Girasol 1L</strong><br><small style="color:var(--text-muted)">10 unidades · min 18</small></div>
+              <span class="badge amber">Bajo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:20px">
+          <h4>🕐 Últimos movimientos</h4>
+          <div class="list-item"><div><span class="time">10:24</span><strong>Venta #1482</strong> — $45.50 · Cajera: María</div><span class="badge green">Completada</span></div>
+          <div class="list-item"><div><span class="time">10:19</span><strong>Entrada stock</strong> — +50 Leche · Bodega: Juan</div><span class="badge blue">Entrada</span></div>
+          <div class="list-item"><div><span class="time">10:15</span><strong>Ajuste manual</strong> — -2 Pan · Admin: Carlos</div><span class="badge amber">Ajuste</span></div>
+          <div class="list-item"><div><span class="time">10:02</span><strong>Venta #1481</strong> — $28.30 · Cajera: María</div><span class="badge green">Completada</span></div>
+        </div>
+      </div>
+      <div class="mock-footer">StockManager © 2025 · Todos los derechos reservados</div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 3. POS ================= -->
+<div class="screen" id="screen-pos">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item active"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Caja 01</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>🛒 POS · Caja 01</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" style="background:#10B981">MG</div>
+          <span>María G. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="pos">
+          <!-- LEFT -->
+          <div>
+            <div class="search-bar">
+              <input type="text" placeholder="🔍 Escanear código de barras o buscar producto...">
+              <button>Buscar</button>
+            </div>
+            <div class="mode-toggle">
+              <button class="active">⚡ Escáner</button>
+              <button>⌨️ Manual</button>
+              <button style="margin-left:auto;border-color:#BFDBFE;color:var(--primary)">F2 Buscar · F5 Cobrar</button>
+            </div>
+
+            <div class="panel" style="padding:0;overflow:hidden">
+              <div class="product-row">
+                <div>🥛 <strong>Leche Entera 1L</strong> <small style="color:var(--text-muted)">· 75012345</small></div>
+                <div style="display:flex;align-items:center;gap:14px">
+                  <strong>$2.50</strong>
+                  <button class="add-btn">+</button>
+                </div>
+              </div>
+              <div class="product-row">
+                <div>🍞 <strong>Pan Blanco Grande</strong> <small style="color:var(--text-muted)">· 75012346</small></div>
+                <div style="display:flex;align-items:center;gap:14px">
+                  <strong>$1.80</strong>
+                  <button class="add-btn">+</button>
+                </div>
+              </div>
+              <div class="product-row">
+                <div>🧀 <strong>Queso Gouda 250g</strong> <small style="color:var(--text-muted)">· 75012347</small></div>
+                <div style="display:flex;align-items:center;gap:14px">
+                  <strong>$4.20</strong>
+                  <button class="add-btn">+</button>
+                </div>
+              </div>
+              <div class="product-row">
+                <div>🥚 <strong>Huevos 12u</strong> <small style="color:var(--text-muted)">· 75012349</small></div>
+                <div style="display:flex;align-items:center;gap:14px">
+                  <strong>$3.00</strong>
+                  <button class="add-btn">+</button>
+                </div>
+              </div>
+              <div class="product-row">
+                <div>🥣 <strong>Yogur Natural 1L</strong> <small style="color:var(--text-muted)">· 75012348</small></div>
+                <div style="display:flex;align-items:center;gap:14px">
+                  <strong>$1.20</strong>
+                  <button class="add-btn">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT / TICKET -->
+          <div class="ticket">
+            <div class="ticket-head">
+              <h4>Ticket #1483 <span class="badge blue">En curso</span></h4>
+              <div class="meta">Cliente: Consumidor Final · Cajera: María G.</div>
+            </div>
+            <div class="ticket-items">
+              <div class="ticket-item"><span class="qty">2×</span><span>Leche Entera 1L</span><span><strong>$5.00</strong></span></div>
+              <div class="ticket-item"><span class="qty">1×</span><span>Pan Blanco Grande</span><span><strong>$1.80</strong></span></div>
+              <div class="ticket-item"><span class="qty">3×</span><span>Yogur Natural 1L</span><span><strong>$3.60</strong></span></div>
+            </div>
+            <div class="ticket-totals">
+              <div class="tot-row"><span>Subtotal</span><span>$10.40</span></div>
+              <div class="tot-row"><span>IVA (16%)</span><span>$1.66</span></div>
+              <div class="tot-row"><span>Descuento</span><span>$0.00</span></div>
+              <div class="tot-row grand"><span>TOTAL</span><span>$12.06</span></div>
+            </div>
+            <div class="pay-btns">
+              <button>💵 Efectivo</button>
+              <button>💳 Tarjeta</button>
+              <button>🔀 Mixto</button>
+              <button style="color:var(--danger);border-color:#FECACA">✖ Anular</button>
+            </div>
+            <button class="btn-cobrar">✅ COBRAR · F5</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 4. MODO OFFLINE ================= -->
+<div class="screen" id="screen-offline">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item active"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Caja 01</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>🛒 POS · Caja 01</span>
+          <span class="status"><span class="dot off"></span> Sin conexión</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" style="background:#10B981">MG</div>
+          <span>María G. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="offline-banner">
+          <div>⚠️ <strong>Trabajando en modo offline.</strong> Las ventas se guardan localmente y se sincronizarán automáticamente al recuperar conexión.</div>
+          <div><strong>📊 Pendientes:</strong> 12 ventas · Última sync: hace 3 min</div>
+        </div>
+
+        <div class="pos">
+          <div>
+            <div class="search-bar">
+              <input type="text" placeholder="🔍 Escanear código de barras o buscar producto...">
+              <button>Buscar</button>
+            </div>
+            <div class="mode-toggle">
+              <button class="active">⚡ Escáner</button>
+              <button>⌨️ Manual</button>
+            </div>
+            <div class="panel" style="padding:0;overflow:hidden">
+              <div class="product-row">
+                <div>🥛 <strong>Leche Entera 1L</strong> <small style="color:var(--text-muted)">· 75012345</small></div>
+                <div style="display:flex;align-items:center;gap:14px"><strong>$2.50</strong><button class="add-btn">+</button></div>
+              </div>
+              <div class="product-row">
+                <div>🍞 <strong>Pan Blanco Grande</strong> <small style="color:var(--text-muted)">· 75012346</small></div>
+                <div style="display:flex;align-items:center;gap:14px"><strong>$1.80</strong><button class="add-btn">+</button></div>
+              </div>
+              <div class="product-row">
+                <div>🧀 <strong>Queso Gouda 250g</strong> <small style="color:var(--text-muted)">· 75012347</small></div>
+                <div style="display:flex;align-items:center;gap:14px"><strong>$4.20</strong><button class="add-btn">+</button></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ticket">
+            <div class="ticket-head">
+              <h4>Ticket #1484 <span class="badge amber">Offline</span></h4>
+              <div class="meta">Se guardará localmente</div>
+            </div>
+            <div class="ticket-items">
+              <div class="ticket-item"><span class="qty">1×</span><span>Leche Entera 1L</span><span><strong>$2.50</strong></span></div>
+              <div class="ticket-item"><span class="qty">2×</span><span>Pan Blanco Grande</span><span><strong>$3.60</strong></span></div>
+            </div>
+            <div class="ticket-totals">
+              <div class="tot-row"><span>Subtotal</span><span>$6.10</span></div>
+              <div class="tot-row"><span>IVA (16%)</span><span>$0.98</span></div>
+              <div class="tot-row grand"><span>TOTAL</span><span>$7.08</span></div>
+            </div>
+            <button class="btn-cobrar" style="background:var(--warning)">✅ COBRAR (LOCAL)</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 5. CARGA DE INVENTARIO ================= -->
+<div class="screen" id="screen-carga">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item active"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Bodega</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>📥 Carga de Inventario Asistida</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" style="background:#F59E0B">JP</div>
+          <span>Juan P. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Carga y Gestión de Inventario</h2>
+        <p class="page-sub">Digitaliza facturas o listas en papel y valida antes de aplicar los cambios</p>
+
+        <div class="steps">
+          <div class="step-card">
+            <div class="ico">📄</div>
+            <h5>Escanear Documento</h5>
+            <p>Usa el escáner físico para digitalizar facturas o listas de inventario</p>
+            <button>🖨️ Escanear</button>
+          </div>
+          <div class="step-card">
+            <div class="ico">📁</div>
+            <h5>Subir PDF / Imagen</h5>
+            <p>Arrastra o selecciona un archivo digitalizado previamente</p>
+            <button>📎 Seleccionar</button>
+          </div>
+          <div class="step-card">
+            <div class="ico">⌨️</div>
+            <h5>Entrada Manual</h5>
+            <p>Ingresa los datos directamente si el documento no es legible</p>
+            <button>✏️ Abrir Tabla</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <h3 style="font-size:15px;font-weight:600">Consola de Validación Humana</h3>
+          <span class="badge amber">⚠️ Revisa antes de aprobar</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>Código</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Estado</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td><td>75012345</td><td>Leche Entera 1L</td><td>50</td><td>$2.50</td>
+                <td><span class="badge green">✅ OK</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr>
+                <td>2</td><td>75012346</td><td>Pan Blanco</td><td>30</td><td>$1.80</td>
+                <td><span class="badge green">✅ OK</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr class="doubt">
+                <td>3</td><td>75012347</td><td>Queso Gouda</td>
+                <td><input type="text" placeholder="?" style="width:70px;padding:4px 6px;border:1.5px solid var(--warning);border-radius:5px"></td>
+                <td>$4.20</td>
+                <td><span class="badge amber">⚠️ Duda</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr class="doubt">
+                <td>4</td><td>7501234</td><td>Yogur Natural</td><td>24</td><td>$1.20</td>
+                <td><span class="badge red">⚠️ Código corto</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr>
+                <td>5</td><td>75012349</td><td>Huevos 12u</td><td>15</td><td>$3.00</td>
+                <td><span class="badge green">✅ OK</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <strong style="font-size:13px">📝 Corrección rápida — Fila 3</strong>
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+            <input type="number" placeholder="Cantidad" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit">
+            <select style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit">
+              <option>Queso Gouda 250g</option>
+            </select>
+            <button class="btn-solid">Aplicar</button>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;flex-wrap:wrap;gap:12px">
+          <span style="color:var(--text-muted);font-size:13px">5 registros · 3 válidos · 2 requieren corrección</span>
+          <div style="display:flex;gap:10px">
+            <button class="btn-outline">❌ Cancelar</button>
+            <button class="btn-outline">💾 Guardar Borrador</button>
+            <button class="btn-solid btn-success">✅ Aprobar y Actualizar</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 6. ROLES Y PERMISOS ================= -->
+<div class="screen" id="screen-roles">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item active"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Admin</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>⚙️ Administración › Control de Acceso y Roles</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">CR</div>
+          <span>Carlos R. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="inner-tabs">
+          <button class="inner-tab active">👥 Usuarios</button>
+          <button class="inner-tab">🎭 Roles</button>
+          <button class="inner-tab">🔐 Permisos</button>
+          <button class="inner-tab">🏬 Sucursales</button>
+        </div>
+
+        <div class="toolbar">
+          <h3 style="font-size:15px;font-weight:600">Usuarios del Sistema</h3>
+          <button class="btn-solid">➕ Nuevo Usuario</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Carlos Ruiz</strong></td><td>carlos@tienda.com</td>
+                <td><span class="badge blue">Administrador</span></td>
+                <td><span class="badge green">🟢 Activo</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr>
+                <td><strong>María Gómez</strong></td><td>maria@tienda.com</td>
+                <td><span class="badge gray">Cajera</span></td>
+                <td><span class="badge green">🟢 Activo</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr>
+                <td><strong>Juan Pérez</strong></td><td>juan@tienda.com</td>
+                <td><span class="badge gray">Bodega</span></td>
+                <td><span class="badge green">🟢 Activo</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+              <tr>
+                <td><strong>Ana López</strong></td><td>ana@tienda.com</td>
+                <td><span class="badge gray">Cajera</span></td>
+                <td><span class="badge red">🔴 Inactivo</span></td>
+                <td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" style="margin-top:22px">
+          <h4>🔐 Permisos granulares del rol: <span class="badge gray" style="margin-left:6px">Cajera</span></h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;padding-top:6px">
+            <label class="cfg-field"><span>☑ registrar_venta</span><input type="checkbox" checked></label>
+            <label class="cfg-field"><span>☑ aplicar_descuento_bajo</span><input type="checkbox" checked></label>
+            <label class="cfg-field"><span>☐ editar_precio</span><input type="checkbox"></label>
+            <label class="cfg-field"><span>☐ eliminar_producto</span><input type="checkbox"></label>
+            <label class="cfg-field"><span>☑ consultar_stock</span><input type="checkbox" checked></label>
+            <label class="cfg-field"><span>☐ ajustar_inventario</span><input type="checkbox"></label>
+            <label class="cfg-field"><span>☐ ver_reportes</span><input type="checkbox"></label>
+            <label class="cfg-field"><span>☑ cerrar_caja</span><input type="checkbox" checked></label>
+          </div>
+          <div style="text-align:right;margin-top:18px">
+            <button class="btn-solid">💾 Guardar Permisos</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 7. CATÁLOGOS ================= -->
+<div class="screen" id="screen-catalogos">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item active"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Admin</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>⚙️ Administración › Catálogos Maestros</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">CR</div>
+          <span>Carlos R. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="inner-tabs">
+          <button class="inner-tab active">Categorías</button>
+          <button class="inner-tab">Subcategorías</button>
+          <button class="inner-tab">Marcas</button>
+          <button class="inner-tab">Proveedores</button>
+          <button class="inner-tab">Unidades de Medida</button>
+        </div>
+
+        <div class="toolbar">
+          <h3 style="font-size:15px;font-weight:600">Categorías</h3>
+          <button class="btn-solid">➕ Nueva Categoría</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Código</th><th>Nombre</th><th>Subcategorías</th><th>Productos</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>CAT01</td><td><strong>Lácteos</strong></td><td>5</td><td>48</td><td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td></tr>
+              <tr><td>CAT02</td><td><strong>Panadería</strong></td><td>3</td><td>22</td><td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td></tr>
+              <tr><td>CAT03</td><td><strong>Bebidas</strong></td><td>6</td><td>65</td><td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td></tr>
+              <tr><td>CAT04</td><td><strong>Limpieza</strong></td><td>4</td><td>31</td><td><button class="act-btn">✏️</button><button class="act-btn">🗑️</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" style="margin-top:22px">
+          <h4>🏷️ Unidades de medida configuradas</h4>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span class="badge blue" style="padding:7px 14px;font-size:13px">Pieza (pz)</span>
+            <span class="badge blue" style="padding:7px 14px;font-size:13px">Kilogramo (kg)</span>
+            <span class="badge blue" style="padding:7px 14px;font-size:13px">Caja (cj)</span>
+            <span class="badge blue" style="padding:7px 14px;font-size:13px">Litro (L)</span>
+            <span class="badge gray" style="padding:7px 14px;font-size:13px;cursor:pointer">+ Añadir</span>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:22px;text-align:center;background:#EFF6FF;border:1px dashed #BFDBFE">
+          <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:12px">
+            ¿Necesitas ayuda cargando tus catálogos iniciales (marcas, categorías, proveedores)?
+          </p>
+          <button class="btn-solid">❓ Solicitar configuración personalizada</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 8. CONFIGURACIÓN ================= -->
+<div class="screen" id="screen-config">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item active"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Admin</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>⚙️ Administración › Configuración General</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">CR</div>
+          <span>Carlos R. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Configuración del Entorno</h2>
+        <p class="page-sub">Reglas de negocio, impuestos, alertas y sucursales</p>
+
+        <div class="cfg-grid">
+          <div class="cfg-panel">
+            <h4>🏪 Datos de la Empresa</h4>
+            <div class="cfg-field"><span>Nombre</span><input type="text" value="Supermercado X"></div>
+            <div class="cfg-field"><span>RFC</span><input type="text" value="XXXX-XXXXXX-XXX"></div>
+            <div class="cfg-field"><span>Sucursal principal</span>
+              <select><option>Centro</option><option>Norte</option><option>Sur</option></select>
+            </div>
+          </div>
+          <div class="cfg-panel">
+            <h4>💰 Impuestos y Moneda</h4>
+            <div class="cfg-field"><span>Moneda base</span>
+              <select><option>MXN</option><option>USD</option><option>EUR</option></select>
+            </div>
+            <div class="cfg-field"><span>IVA (%)</span><input type="number" value="16"></div>
+            <div class="cfg-field"><span>Redondeo</span>
+              <select><option>Normal</option><option>Arriba</option><option>Abajo</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:20px">
+          <h4>📊 Alertas de Stock Mínimo</h4>
+          <div class="cfg-field">
+            <span>Activar notificaciones automáticas de reorden</span>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="cfg-field"><span>Umbral por defecto (unidades)</span><input type="number" value="10"></div>
+          <div class="cfg-field"><span>Periodicidad de reporte</span>
+            <select><option>Diario</option><option>Semanal</option><option>Mensual</option></select>
+          </div>
+        </div>
+
+        <div class="toolbar" style="margin-top:20px">
+          <h4 style="font-size:15px;font-weight:600">🏬 Multi-sucursal</h4>
+          <button class="btn-solid">➕ Nueva Sucursal</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Sucursal</th><th>Dirección</th><th>Encargado</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Centro</strong></td><td>Av. Juárez 123</td><td>Carlos R.</td><td><span class="badge green">🟢 Activa</span></td><td><button class="act-btn">✏️</button></td></tr>
+              <tr><td><strong>Sucursal Norte</strong></td><td>Calle 5 #45</td><td>María G.</td><td><span class="badge green">🟢 Activa</span></td><td><button class="act-btn">✏️</button></td></tr>
+              <tr><td><strong>Bodega Sur</strong></td><td>Km 12 Carr. Sur</td><td>Juan P.</td><td><span class="badge amber">🟡 Mantenimiento</span></td><td><button class="act-btn">✏️</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:22px">
+          <button class="btn-outline">❌ Cancelar</button>
+          <button class="btn-solid">💾 Guardar Configuración</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 9. AUDITORÍA ================= -->
+<div class="screen" id="screen-auditoria">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item active"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Admin</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>⚙️ Administración › Auditoría y Logs</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">CR</div>
+          <span>Carlos R. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Auditoría y Logs del Sistema</h2>
+        <p class="page-sub">Registro de trazabilidad: quién, qué y cuándo se realizó cada acción crítica</p>
+
+        <div class="toolbar">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <select class="btn-outline" style="padding:9px 14px"><option>👤 Todos los usuarios</option><option>Carlos R.</option><option>María G.</option></select>
+            <select class="btn-outline" style="padding:9px 14px"><option>📅 Últimos 7 días</option><option>Últimos 30 días</option><option>Hoy</option></select>
+            <input type="text" placeholder="🔎 Buscar acción..." class="btn-outline" style="padding:9px 14px;min-width:220px">
+          </div>
+          <div style="display:flex;gap:10px">
+            <button class="btn-outline">📥 Exportar CSV</button>
+            <button class="btn-outline">🖨️ Imprimir</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Fecha / Hora</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>15/04 10:32:11</td><td>Carlos R.</td><td><span class="badge blue">editar_precio</span></td><td>Leche 1L: $2.30 → $2.50</td></tr>
+              <tr><td>15/04 10:15:47</td><td>Juan P.</td><td><span class="badge amber">ajuste_stock</span></td><td>Pan -2 unidades (merma)</td></tr>
+              <tr><td>15/04 09:58:02</td><td>María G.</td><td><span class="badge green">registrar_venta</span></td><td>Ticket #1481 · $28.30</td></tr>
+              <tr><td>15/04 09:45:33</td><td>Carlos R.</td><td><span class="badge blue">crear_usuario</span></td><td>ana@tienda.com</td></tr>
+              <tr><td>15/04 08:12:20</td><td>Sistema</td><td><span class="badge gray">sync_offline</span></td><td>12 ventas sincronizadas</td></tr>
+              <tr><td>14/04 18:44:09</td><td>Juan P.</td><td><span class="badge green">entrada_stock</span></td><td>+50 unidades Leche 1L</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;color:var(--text-muted);font-size:13px">
+          <span>Mostrando 6 de 143 registros</span>
+          <span>Página 1 de 24</span>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= 10. SOPORTE ================= -->
+<div class="screen" id="screen-soporte">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">📦 <span>StockManager</span></div>
+      <div class="nav-item"><span class="ico">🏠</span><span>Inicio</span></div>
+      <div class="nav-item"><span class="ico">🛒</span><span>POS</span></div>
+      <div class="nav-item"><span class="ico">📦</span><span>Inventario</span></div>
+      <div class="nav-item"><span class="ico">📥</span><span>Cargas</span></div>
+      <div class="nav-item"><span class="ico">🏷️</span><span>Catálogos</span></div>
+      <div class="nav-item"><span class="ico">👥</span><span>Usuarios</span></div>
+      <div class="nav-item"><span class="ico">⚙️</span><span>Configuración</span></div>
+      <div class="nav-item"><span class="ico">📊</span><span>Auditoría</span></div>
+      <div class="nav-spacer"></div>
+      <div class="nav-item active"><span class="ico">🆘</span><span>Soporte</span></div>
+      <div class="nav-foot">v2.1.0 · Admin</div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span>🆘 Asistencia y Configuración Personalizada</span>
+          <span class="status"><span class="dot on"></span> Online</span>
+        </div>
+        <div class="user-chip">
+          <div class="avatar">CR</div>
+          <span>Carlos R. ▾</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="help-hero">
+          <h3>🤝 ¿Necesitas ayuda configurando StockManager?</h3>
+          <p>Nuestro equipo técnico puede ayudarte a poner en marcha tu negocio en tiempo récord.</p>
+          <ul>
+            <li>Configurar reglas de negocio personalizadas</li>
+            <li>Cargar catálogos iniciales (marcas, categorías, proveedores)</li>
+            <li>Dar de alta sucursales y usuarios</li>
+            <li>Migrar tu inventario actual al sistema</li>
+          </ul>
+          <br>
+          <button class="btn-solid" style="padding:12px 26px;font-size:14px">📞 Solicitar Soporte Personalizado</button>
+        </div>
+
+        <div class="help-form">
+          <h3 style="font-size:16px;font-weight:600;margin-bottom:16px">Formulario rápido de solicitud</h3>
+          <div class="row">
+            <div>
+              <label>Nombre</label>
+              <input type="text" placeholder="Tu nombre completo">
+            </div>
+            <div>
+              <label>Empresa</label>
+              <input type="text" placeholder="Nombre de tu empresa">
+            </div>
+          </div>
+          <div class="full">
+            <label>Necesito asistencia con:</label>
+            <div class="check-row">
+              <label><input type="checkbox" checked> Catálogos iniciales</label>
+              <label><input type="checkbox"> Reglas de negocio</label>
+              <label><input type="checkbox"> Alta de sucursales</label>
+              <label><input type="checkbox"> Otro</label>
+            </div>
+          </div>
+          <div class="full">
+            <label>Mensaje</label>
+            <textarea rows="4" placeholder="Cuéntanos brevemente qué necesitas..."></textarea>
+          </div>
+          <div style="text-align:right">
+            <button class="btn-solid">📤 Enviar Solicitud</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      tabs.forEach(t=>t.classList.remove('active'));
+      screens.forEach(s=>s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('screen-'+tab.dataset.screen).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  // Mini interactividad para inner tabs (visual)
+  document.querySelectorAll('.inner-tabs').forEach(group=>{
+    group.querySelectorAll('.inner-tab').forEach(t=>{
+      t.addEventListener('click',()=>{
+        group.querySelectorAll('.inner-tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+  });
+
+  // Mode toggle POS
+  document.querySelectorAll('.mode-toggle').forEach(group=>{
+    group.querySelectorAll('button').forEach(b=>{
+      if(b.textContent.includes('Buscar')||b.textContent.includes('F2')) return;
+      b.addEventListener('click',()=>{
+        group.querySelectorAll('button').forEach(x=>{if(!x.textContent.includes('Buscar')&&!x.textContent.includes('F2'))x.classList.remove('active')});
+        b.classList.add('active');
+      });
+    });
+  });
+</script>
+</body>
+</html>
